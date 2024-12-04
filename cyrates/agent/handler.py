@@ -44,8 +44,8 @@ class CurrencyAgent:
             lambda row: (row.num / row.currency_rate if row.num > 1 else row.currency_rate),
             axis=1,
         )
-        df["currency_rate"] = np.round(df["currency_rate"], 2)
-        return df[["code", "currency_rate"]]
+        df["rate"] = np.round(df["currency_rate"], 2)
+        return df[["code", "rate"]]
 
     def get_binance_cripto_rates(
         self,

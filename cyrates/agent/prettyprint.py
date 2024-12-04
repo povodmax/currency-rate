@@ -7,7 +7,7 @@ import pandas as pd
 
 def display_as_image(df: pd.DataFrame) -> BytesIO:
 
-    fig, ax = plt.subplots(figsize=(6, 2))
+    fig, ax = plt.subplots(figsize=(1, 1), dpi=300)
     ax.axis("tight")
     ax.axis("off")
 
@@ -21,15 +21,15 @@ def display_as_image(df: pd.DataFrame) -> BytesIO:
     for (row, col), cell in table.get_celld().items():
         cell.set_edgecolor("black")  # black borders
         if row == 0:  # only 1st row - headlines
-            cell.set_text_props(weight="bold")  # bold text
-            cell.set_facecolor("#f2f2f2")  # light-grey background
+            cell.set_text_props(weight="bold", color="black")  # bold text
+            cell.set_facecolor("#d9edf7")  # light-blue background
 
     table.auto_set_font_size(False)
-    table.set_fontsize(10)
+    table.set_fontsize(9)
     table.auto_set_column_width(col=list(range(len(df.columns))))
 
     buffer = BytesIO()
-    plt.savefig(buffer, format="png", bbox_inches="tight")
+    plt.savefig(buffer, format="png", bbox_inches="tight", pad_inches=0.2)
     buffer.seek(0)
     plt.close(fig)
 

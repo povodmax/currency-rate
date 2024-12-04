@@ -27,9 +27,11 @@ flake8 = "^7.1.1"
 isort = "^5.13.2"
 mypy = "^1.13.0"
 pre-commit = "^4.0.1"
+python-dotenv = "^1.0.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.2"
 
 [tool.poetry.scripts]
 rates = "cyrates.agent.fastresult:launch"
+bot = "cyrates.bot.bot:main"
