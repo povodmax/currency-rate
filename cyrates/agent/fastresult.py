@@ -17,6 +17,6 @@ def launch() -> None:
         "\n",
         "Real-time cryptocurrency prices across various trading and exchange platforms:",
         "\n",
-        pretty_print(agent.get_cripto_rates(), "text"),
+        pretty_print(agent.get_crypto_rates(), "text"),
         "\n",
     )

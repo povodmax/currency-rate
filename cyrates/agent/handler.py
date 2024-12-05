@@ -47,12 +47,12 @@ class CurrencyAgent:
         df["rate"] = np.round(df["currency_rate"], 2)
         return df[["code", "rate"]]
 
-    def get_binance_cripto_rates(
+    def get_binance_crypto_rates(
         self,
-        cripto_list: tp.List[str] = ["notcoin", "toncoin", "bitcoin"],
+        crypto_list: tp.List[str] = ["notcoin", "toncoin", "bitcoin"],
     ) -> pd.DataFrame:
         content = []
-        for coin in cripto_list:
+        for coin in crypto_list:
             tag_el = self.get_classdata_from_url(
                 os.path.join(UrlCatalog.BINANCE, coin),
                 "t-Caption2 text-textThird",
@@ -62,14 +62,14 @@ class CurrencyAgent:
             content.append(
                 (price_formatted, coin, "binance"),
             )
-        return pd.DataFrame(content, columns=["price", "cripto", "source"])
+        return pd.DataFrame(content, columns=["price", "crypto", "source"])
 
-    def get_rbc_cripto_rates(
+    def get_rbc_crypto_rates(
         self,
-        cripto_list: tp.List[str] = ["btcusd"],
+        crypto_list: tp.List[str] = ["btcusd"],
     ) -> pd.DataFrame:
         content = []
-        for coin in cripto_list:
+        for coin in crypto_list:
             tag_el = self.get_classdata_from_url(
                 os.path.join(UrlCatalog.RBC, coin),
                 "chart__subtitle js-chart-value",
@@ -79,11 +79,11 @@ class CurrencyAgent:
             content.append(
                 (price_formatted, coin, "rbc"),
             )
-        return pd.DataFrame(content, columns=["price", "cripto", "source"])
+        return pd.DataFrame(content, columns=["price", "crypto", "source"])
 
-    def get_cripto_rates(self) -> pd.DataFrame:
-        cripto_rates = [
-            self.get_binance_cripto_rates(),
-            self.get_rbc_cripto_rates(),
+    def get_crypto_rates(self) -> pd.DataFrame:
+        crypto_rates = [
+            self.get_binance_crypto_rates(),
+            self.get_rbc_crypto_rates(),
         ]
-        return pd.concat(cripto_rates)
+        return pd.concat(crypto_rates)

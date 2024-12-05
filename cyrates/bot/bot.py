@@ -35,12 +35,12 @@ async def button_fiat_action(update: Update, context: ContextTypes.DEFAULT_TYPE)
     await show_menu(update, context)  # return menu back
 
 
-async def button_cripto_action(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Return cripto-rates by pressing 'Cripto-rates' button."""
+async def button_crypto_action(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Return crypto-rates by pressing 'Crypto-rates' button."""
     agent = CurrencyAgent()
-    result = pretty_print(agent.get_cripto_rates(), "image")
+    result = pretty_print(agent.get_crypto_rates(), "image")
     await update.message.reply_photo(photo=result)
-    # result = pretty_print(agent.get_cripto_rates(), "text")
+    # result = pretty_print(agent.get_crypto_rates(), "text")
     # await update.message.reply_text(result)
     await show_menu(update, context)  # return menu back
 
@@ -90,7 +90,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def show_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Show start menu with main buttons."""
     menu_buttons = [
-        [KeyboardButton("Fiat-rates"), KeyboardButton("Cripto-rates")],
+        [KeyboardButton("Fiat-rates"), KeyboardButton("Crypto-rates")],
         [KeyboardButton("AI-assistant")],
     ]
     markup = ReplyKeyboardMarkup(menu_buttons, resize_keyboard=True)
@@ -113,7 +113,7 @@ def main():
         states={
             MENU: [
                 MessageHandler(filters.Regex("^Fiat-rates$"), button_fiat_action),
-                MessageHandler(filters.Regex("^Cripto-rates$"), button_cripto_action),
+                MessageHandler(filters.Regex("^Crypto-rates$"), button_crypto_action),
                 MessageHandler(filters.Regex("^AI-assistant$"), button_ai_action),
             ],
             CHAT_MODE: [
@@ -128,3 +128,7 @@ def main():
     # Bot launching
     print("The BOT was launched!")
     application.run_polling()  # simplier than: start_polling() + idle()
+
+
+if __name__ == "__main__":
+    main()
