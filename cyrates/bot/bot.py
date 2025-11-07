@@ -12,8 +12,8 @@ from telegram.ext import (
     filters,
 )
 
-from cyrates.agent.handler import CurrencyAgent
-from cyrates.agent.prettyprint import pretty_print
+from cyrates.parsing.extractor import CurrencyExtractor
+from cyrates.parsing.prettyprint import pretty_print
 from cyrates.bot import const
 
 load_dotenv(override=True)
@@ -27,7 +27,7 @@ def respect_answer(user: str) -> str:
 
 async def button_fiat_action(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Return fiat-rates by pressing 'Fiat-rates' button."""
-    agent = CurrencyAgent()
+    agent = CurrencyExtractor()
     result = pretty_print(agent.get_fiat_rates(), "image")
     await update.message.reply_photo(photo=result)
     await show_menu(update, context)  # return menu back
@@ -35,7 +35,7 @@ async def button_fiat_action(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 async def button_crypto_action(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Return crypto-rates by pressing 'Crypto-rates' button."""
-    agent = CurrencyAgent()
+    agent = CurrencyExtractor()
     result = pretty_print(agent.get_crypto_rates(), "image")
     await update.message.reply_photo(photo=result)
     # result = pretty_print(agent.get_crypto_rates(), "text")
@@ -131,9 +131,13 @@ def main():
     )
     application.add_handler(conv_handler)
 
-    # Bot launching
-    logging.basicConfig(level=logging.INFO)
+    # Logging configuration
+    logging.basicConfig(level=logging.INFO)  # global logging level
+    logging.getLogger("telegram.bot").setLevel(logging.WARNING)  # mute telegram.bot logs
+    logging.getLogger("telegram.ext._application").setLevel(logging.WARNING)
     logger = logging.getLogger(__name__)
+
+    # Bot launching
     logger.info("The BOT was launched!")
     application.run_polling()  # simplier than: start_polling() + idle()
 

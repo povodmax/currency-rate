@@ -1,13 +1,13 @@
 import warnings
 
-from cyrates.agent.handler import CurrencyAgent
-from cyrates.agent.prettyprint import pretty_print
+from cyrates.parsing.extractor import CurrencyExtractor
+from cyrates.parsing.prettyprint import pretty_print
 
 warnings.simplefilter(action="ignore", category=FutureWarning)
 
 
 def launch() -> None:
-    agent = CurrencyAgent()
+    agent = CurrencyExtractor()
     print(
         "\n",
         "The Central Bank of Russian Federation present currency rates:",
