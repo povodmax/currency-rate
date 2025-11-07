@@ -47,6 +47,30 @@ class CurrencyAgent:
         df["rate"] = np.round(df["currency_rate"], 2)
         return df[["code", "rate"]]
 
+    def get_ffmob_rates(
+        self,
+        fiat_list: tp.List[str] = ["USD", "EUR", "KZT"],
+    ) -> pd.DataFrame:
+        response = requests.get(UrlCatalog.FREEDOM)  # get HTML-code for page
+        soup = bs4.BeautifulSoup(response.content, "html.parser")
+        return str(soup)
+        # rnm_dict = {
+        #     "Букв. код": "code",
+        #     "Единиц": "num",
+        #     "Валюта": "currency",
+        #     "Курс": "currency_rate",
+        # }
+        # df = pd.read_html(str(tag_el), converters={4: str}, thousands=None)[0]
+        # df = df.rename(columns=rnm_dict)
+        # df = df.loc[df["code"].isin(fiat_list)]
+        # df["currency_rate"] = df["currency_rate"].apply(lambda x: float(x.replace(",", ".")))
+        # df["currency_rate"] = df.apply(
+        #     lambda row: (row.num / row.currency_rate if row.num > 1 else row.currency_rate),
+        #     axis=1,
+        # )
+        # df["rate"] = np.round(df["currency_rate"], 2)
+        # return df[["code", "rate"]]
+
     def get_binance_crypto_rates(
         self,
         crypto_list: tp.List[str] = ["notcoin", "toncoin", "bitcoin"],
@@ -83,7 +107,7 @@ class CurrencyAgent:
 
     def get_crypto_rates(self) -> pd.DataFrame:
         crypto_rates = [
-            self.get_binance_crypto_rates(),
+            # self.get_binance_crypto_rates(),
             self.get_rbc_crypto_rates(),
         ]
         return pd.concat(crypto_rates)

@@ -15,6 +15,7 @@ from telegram.ext import (
 from cyrates.agent.handler import CurrencyAgent
 from cyrates.agent.prettyprint import pretty_print
 from cyrates.bot import const
+import asyncio
 
 load_dotenv(override=True)
 openai.api_key = os.getenv("OPENAI_API_KEY")  # OpenAI API secret-key
@@ -131,4 +132,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
