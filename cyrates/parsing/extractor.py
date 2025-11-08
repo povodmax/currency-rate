@@ -1,6 +1,5 @@
-# -*- coding: utf-8 -*-
 import os
-import typing as tp
+from io import StringIO
 
 import bs4
 import numpy as np
@@ -24,8 +23,8 @@ class CurrencyExtractor:
         response = requests.get(url_adress)  # get HTML-code for page
         soup = bs4.BeautifulSoup(response.content, "html.parser")
         return soup.find(class_=class_we_searching)
-    
-    @staticmethod   
+
+    @staticmethod
     def format_crypto_price(price: float, currency_sign: str = "$") -> str:
         """Format float price for cryptos with dollar sign and thousands separator."""
         if price < 100:
@@ -34,7 +33,7 @@ class CurrencyExtractor:
 
     def get_cbr_fiat_rates(
         self,
-        fiat_list: tp.List[str] = ["USD", "EUR", "KZT", "CNY", "TRY", "AED"],
+        fiat_list: list[str] = ["USD", "EUR", "KZT", "CNY", "TRY", "AED"],
     ) -> pd.DataFrame:
         tag_el = self.get_classdata_from_url(UrlCatalog.CBR, "table")
         rnm_dict = {
@@ -43,7 +42,8 @@ class CurrencyExtractor:
             "Валюта": "currency",
             "Курс": "currency_rate",
         }
-        df = pd.read_html(str(tag_el), converters={4: str}, thousands=None)[0]
+        html_str = str(tag_el)
+        df = pd.read_html(StringIO(html_str), converters={4: str}, thousands=None)[0]  # ✅ фиксано
         df = df.rename(columns=rnm_dict)
         df = df.loc[df["code"].isin(fiat_list)]
         df["currency_rate"] = df["currency_rate"].apply(lambda x: float(x.replace(",", ".")))
@@ -53,10 +53,9 @@ class CurrencyExtractor:
         )
         df["rate"] = np.round(df["currency_rate"], 2).apply(lambda x: f"{x} ₽")
         df["source"] = "cbr"
-        return  df[["code", "rate", "source"]]
+        return df[["code", "rate", "source"]]
 
     def get_freedom_fiat_rates(self) -> pd.DataFrame:
-        
         def extract_non_rub_currency(pair: str) -> str:
             parts = pair.split(" / ")
             return parts[0] if parts[1] == "RUB" else parts[1]
@@ -86,16 +85,16 @@ class CurrencyExtractor:
             raise RuntimeError(f"Failed to fetch Freedom Bank rates: {e}")
 
     def get_bybit_crypto_rates(
-        self, symbols: 
-        tp.List[str] = ["BTC", "TON", "SOL", "ETH"],
+        self,
+        symbols: list[str] = ["BTC", "TON", "SOL", "ETH"],
     ) -> pd.DataFrame:
         """Fetches latest prices for selected crypto symbols from Bybit API."""
-        
         try:
-            response = requests.get(UrlCatalog.BYBIT, timeout=5)
+            headers = {"User-Agent": "Mozilla/5.0"}
+            response = requests.get(UrlCatalog.BYBIT, headers=headers, timeout=5)
             response.raise_for_status()
             data = response.json()
-            
+
             result = []
             for item in data.get("result", {}).get("list", []):
                 symbol = item["symbol"]  # e.g. "BTCUSDT"
@@ -104,18 +103,17 @@ class CurrencyExtractor:
                         price = float(item["lastPrice"])
                         price_formatted = self.format_crypto_price(price)
                         result.append((coin, price_formatted, "bybit"))
-            
+
             return pd.DataFrame(result, columns=["crypto", "price", "source"])
-        
+
         except Exception as e:
             raise RuntimeError(f"Failed to fetch Bybit rates: {e}")
 
     def get_binance_crypto_rates(
-        self, 
+        self,
         symbols=["BTC", "ETH", "TON", "SOL"],
     ) -> pd.DataFrame:
         """Fetches latest prices for selected crypto symbols from Binance API."""
-
         try:
             response = requests.get(UrlCatalog.BINANCE, timeout=5)
             response.raise_for_status()
@@ -134,11 +132,8 @@ class CurrencyExtractor:
 
         except Exception as e:
             raise RuntimeError(f"Failed to fetch Binance rates: {e}")
-        
-    def get_rbc_crypto_rates(
-        self,
-        crypto_list: tp.List[str] = ["btcusd", "ethusd", "tonusd", "solusd"]
-    ) -> pd.DataFrame:
+
+    def get_rbc_crypto_rates(self, crypto_list: list[str] = ["btcusd", "ethusd", "tonusd", "solusd"]) -> pd.DataFrame:
         content = []
         for coin in crypto_list:
             try:
@@ -175,7 +170,7 @@ class CurrencyExtractor:
             .reset_index()
             .sort_values("crypto", ascending=True)
         )
-    
+
     def get_fiat_rates(self) -> pd.DataFrame:
         fiat_rates = [
             self.get_cbr_fiat_rates(),
@@ -187,4 +182,3 @@ class CurrencyExtractor:
             .reset_index()
             .sort_values("code", ascending=False)
         )
-            

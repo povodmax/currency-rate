@@ -1,4 +1,3 @@
-import typing as tp
 from io import BytesIO
 
 import matplotlib.pyplot as plt
@@ -6,7 +5,6 @@ import pandas as pd
 
 
 def display_as_image(df: pd.DataFrame) -> BytesIO:
-
     fig, ax = plt.subplots(figsize=(1, 1), dpi=300)
     ax.axis("tight")
     ax.axis("off")
@@ -36,13 +34,12 @@ def display_as_image(df: pd.DataFrame) -> BytesIO:
     return buffer
 
 
-def pretty_print(df: pd.DataFrame, as_what: str) -> tp.Optional[tp.Union[BytesIO, str]]:
-    """
-    Parameter as_what can be:
-        - "text"
-        - "image"
-        - "markdown"
-        - "csv"
+def pretty_print(df: pd.DataFrame, as_what: str) -> BytesIO | str | None:
+    """Parameter as_what can be:
+    - "text"
+    - "image"
+    - "markdown"
+    - "csv"
     """
     if as_what == "text":
         return df.to_string(index=False)

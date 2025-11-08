@@ -1,5 +1,6 @@
-import os
 import logging
+import os
+
 import openai
 from dotenv import load_dotenv
 from telegram import KeyboardButton, ReplyKeyboardMarkup, Update
@@ -12,9 +13,9 @@ from telegram.ext import (
     filters,
 )
 
+from cyrates.bot import const
 from cyrates.parsing.extractor import CurrencyExtractor
 from cyrates.parsing.prettyprint import pretty_print
-from cyrates.bot import const
 
 load_dotenv(override=True)
 
@@ -48,7 +49,8 @@ async def button_ai_action(update: Update, context: ContextTypes.DEFAULT_TYPE):
     stop_button = [[KeyboardButton("stop")]]
     markup = ReplyKeyboardMarkup(stop_button, resize_keyboard=True)
     await update.message.reply_text(
-        "Hi, I'm AI-assistant. " + respect_answer(update.effective_user.first_name), reply_markup=markup
+        "Hi, I'm AI-assistant. " + respect_answer(update.effective_user.first_name),
+        reply_markup=markup,
     )
     return CHAT_MODE
 
@@ -75,7 +77,7 @@ def get_chatgpt_response(user_message):
         chatgpt_message = response.choices[0].message.content.strip()
         return chatgpt_message
     except Exception as e:
-        return f"Something went wrong while contacting AI: {str(e)}"
+        return f"Something went wrong while contacting AI: {e!s}"
 
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -104,13 +106,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 def main():
     """Bot launcher in polling or webhook mode."""
-
     mode = os.getenv("TELEGRAM_BOT_MODE").lower()
 
     token = os.getenv("TELEGRAM_BOT_TOKEN")
     if not token:
         raise RuntimeError("TELEGRAM_BOT_TOKEN not set")
-    
+
     openai.api_key = os.getenv("OPENAI_API_KEY")
     if not openai.api_key:
         raise RuntimeError("OPENAI_API_KEY not set")

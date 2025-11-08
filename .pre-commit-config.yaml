@@ -1,9 +1,12 @@
 repos:
-  # Ruff для линтинга Python файлов (.py)
+  # Ruff: линтер + форматтер
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.4.4
     hooks:
       - id: ruff
+        args: ["--fix"]  # включает автоматическое исправление
+        files: ^cyrates/
+      - id: ruff-format
         files: ^cyrates/
 
   # Проверка pyproject.toml через poetry

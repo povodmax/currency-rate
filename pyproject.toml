@@ -35,5 +35,9 @@ flask = "^3.1.2"
 pytest = "^7.1.2"
 
 [tool.poetry.scripts]
-rates = "cyrates.agent.fastresult:launch"
+rates = "cyrates.parsing.fastresult:launch"
 bot = "cyrates.bot.bot:main"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.14.4"
+

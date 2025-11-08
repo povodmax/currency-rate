@@ -1,0 +1,32 @@
+line-length = 120
+target-version = "py311"
+
+# Включаем только самое нужное
+lint.select = [
+  "E",    # pycodestyle: базовые синтаксические ошибки
+  "F",    # pyflakes: неиспользуемые переменные, импорты и т.п.
+  "B",    # flake8-bugbear: реальные баги
+  "I",    # isort: порядок импортов
+  "UP",   # pyupgrade: синтаксис под твою версию Python
+  "C4",   # comprehensions: тупые конструкции с list/dict/set
+]
+
+# Убираем раздражающие правила
+lint.ignore = [
+  "D",      # все docstring'и
+  "ANN",    # type-hints в функциях
+  "S",      # bandit (security) — полезно, но шумит
+  "PL",     # pylint — шумит адски
+  "RUF001", # "кириллица в строках" — бесполезно
+  "T20",    # print-debug
+  "B006",   # mutable default — полезно, но можно отключить на старте
+  "B007",   # неиспользуемая переменная в цикле
+  "D401",   # imperative mood в docstring
+  "D415",   # пунктуация в docstring
+  "D400",   # точка в docstring
+  "D205",   # пустая строка между строками docstring
+  "B904",   # raise from — спорно
+  "S104",   # "0.0.0.0" — бесит в dev-сервере
+  "S113",   # requests без timeout — пусть будет на совести
+  "PLR2004",# магические числа
+]
