@@ -51,11 +51,11 @@ It uses data from real websites I check daily to monitor both fiat and crypto ex
 * Python ≥ 3.11
 * Poetry
 * .env file for API keys containing the following variables:
-** OPENAI_API_KEY
-** TELEGRAM_BOT_TOKEN
-** TELEGRAM_BOT_MODE (webhook or polling)
-** WEBHOOK_PORT (usually 8080)
-** WEBHOOK_URL
+  * `OPENAI_API_KEY`
+  * `TELEGRAM_BOT_TOKEN`
+  * `TELEGRAM_BOT_MODE` (webhook or polling)
+  * `WEBHOOK_PORT` (usually 8080)
+  * `WEBHOOK_URL`
 
 ### Installation
 
@@ -80,15 +80,17 @@ poetry run rates
 
 ## 🧬 Tech stack
 
-| Layer           | Technology            |
-| --------------- | --------------------- |
-| Language        | Python 3.11           |
-| Package manager | Poetry                |
-| API clients     | `requests`            |
-| CLI             | built-in `argparse`   |
-| Env management  | `python-dotenv`       |
-| Bot             | `python-telegram-bot` |
-
+| Layer            | Technology            |
+| ---------------- | --------------------- |
+| Language         | Python 3.11           |
+| Package manager  | Poetry                |
+| API clients      | `requests`            |
+| CLI              | built-in `argparse`   |
+| Env management   | `python-dotenv`       |
+| Bot              | `python-telegram-bot` |
+| Linter           | `ruff`                |
+| Containerization | Docker                |
+	
 ---
 
 ## 🤪 Development & Testing
@@ -111,11 +113,12 @@ For new ideas, open an issue or a draft PR.
 
 ## 📜 License
 
-[Max Povod](https://github.com/povodmax)
+MIT 2025 [Max Povod](https://github.com/povodmax)
 
 ---
 
 ## 📨 Contact
 
 **Author:** [Max Povod](https://www.linkedin.com/in/povodmax/)
+
 **Focus:** Data Science / ML Engineering / Supply Chain Analytics
