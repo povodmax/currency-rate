@@ -103,6 +103,10 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 def main():
+    """Bot launcher in polling or webhook mode."""
+
+    mode = os.getenv("TELEGRAM_BOT_MODE").lower()
+
     token = os.getenv("TELEGRAM_BOT_TOKEN")
     if not token:
         raise RuntimeError("TELEGRAM_BOT_TOKEN not set")
@@ -138,8 +142,19 @@ def main():
     logger = logging.getLogger(__name__)
 
     # Bot launching
-    logger.info("The BOT was launched!")
-    application.run_polling()  # simplier than: start_polling() + idle()
+    logger.info(f"BOT launching in {mode} mode...")
+
+    if mode == "webhook":
+        webhook_url = os.getenv("WEBHOOK_URL")
+        if not webhook_url:
+            raise RuntimeError("WEBHOOK_URL must be set for webhook mode")
+        application.run_webhook(
+            listen="0.0.0.0",
+            webhook_port=int(os.getenv("WEBHOOK_PORT")),
+            webhook_url=webhook_url,
+        )
+    else:
+        application.run_polling()
 
 
 if __name__ == "__main__":
