@@ -1,3 +1,5 @@
+
+
 import pytest
 from unittest.mock import patch, Mock
 import pandas as pd
@@ -58,3 +60,4 @@ def test_get_freedom_fiat_rates(mock_get, extractor):
     assert set(df.columns) == {"code", "rate", "source"}
     assert "USD" in df["code"].values
     assert df["rate"].str.endswith("₽").all()
+
