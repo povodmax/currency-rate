@@ -101,7 +101,8 @@ async def show_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    return await show_menu(update, context)
+    await show_menu(update, context)
+    return MENU
 
 
 async def button_wake_up(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -138,7 +139,7 @@ def main():
                 MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message),
             ],
         },
-        fallbacks=[],
+        fallbacks=[CommandHandler("start", start)],
     )
     application.add_handler(conv_handler)
 
