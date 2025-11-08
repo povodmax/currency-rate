@@ -90,7 +90,16 @@ class CurrencyExtractor:
     ) -> pd.DataFrame:
         """Fetches latest prices for selected crypto symbols from Bybit API."""
         try:
-            headers = {"User-Agent": "Mozilla/5.0"}
+            # mimic a browser request:
+            headers = {
+                "User-Agent": (
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) "
+                    "Chrome/119.0.0.0 Safari/537.36"
+                ),
+                "Accept": "application/json, text/plain, */*",
+                "Connection": "keep-alive",
+            }
             response = requests.get(UrlCatalog.BYBIT, headers=headers, timeout=5)
             response.raise_for_status()
             data = response.json()
