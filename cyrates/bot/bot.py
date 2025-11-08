@@ -97,7 +97,7 @@ async def show_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     markup = ReplyKeyboardMarkup(menu_buttons, resize_keyboard=True)
     # await update.message.reply_text(respect_answer(update.effective_user.first_name), reply_markup=markup)
     # await update.message.reply_text("First - wake me up, and then - send requests", reply_markup=markup)
-    await update.message.reply_text(" ", reply_markup=markup)
+    await update.message.reply_text("\u2063", reply_markup=markup)  # Invisible but valid
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
