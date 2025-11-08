@@ -51,11 +51,11 @@ It uses data from real websites I check daily to monitor both fiat and crypto ex
 * Python ≥ 3.11
 * Poetry
 * .env file for API keys containing the following variables:
-** OPENAI_API_KEY
-** TELEGRAM_BOT_TOKEN
-** TELEGRAM_BOT_MODE (webhook or polling)
-** WEBHOOK_PORT (usually 8080)
-** WEBHOOK_URL
+  * `OPENAI_API_KEY`
+  * `TELEGRAM_BOT_TOKEN`
+  * `TELEGRAM_BOT_MODE` (webhook or polling)
+  * `WEBHOOK_PORT` (usually 8080)
+  * `WEBHOOK_URL`
 
 ### Installation
 
