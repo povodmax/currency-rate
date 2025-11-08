@@ -150,7 +150,7 @@ def main():
             raise RuntimeError("WEBHOOK_URL must be set for webhook mode")
         application.run_webhook(
             listen="0.0.0.0",
-            webhook_port=int(os.getenv("WEBHOOK_PORT")),
+            port=int(os.getenv("WEBHOOK_PORT")),
             webhook_url=webhook_url,
         )
     else:
