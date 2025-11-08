@@ -90,18 +90,23 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def show_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Show start menu with main buttons."""
     menu_buttons = [
+        [KeyboardButton("Wake up!")],
         [KeyboardButton("Fiat-rates"), KeyboardButton("Crypto-rates")],
         [KeyboardButton("AI-assistant")],
     ]
     markup = ReplyKeyboardMarkup(menu_buttons, resize_keyboard=True)
-    await update.message.reply_text(respect_answer(update.effective_user.first_name), reply_markup=markup)
+    # await update.message.reply_text(respect_answer(update.effective_user.first_name), reply_markup=markup)
+    # await update.message.reply_text("First - wake me up, and then - send requests", reply_markup=markup)
+    await update.message.reply_text("\u200b", reply_markup=markup)  # zero-width space
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Start-command '/start'."""
+    return await show_menu(update, context)
+
+
+async def button_wake_up(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await start(update, context)
     await update.message.reply_text(respect_answer(update.effective_user.first_name))
-    await show_menu(update, context)
-    return MENU
 
 
 def main():
@@ -123,6 +128,7 @@ def main():
         entry_points=[CommandHandler("start", start)],
         states={
             MENU: [
+                MessageHandler(filters.Regex("^Wake up!$"), button_wake_up),
                 MessageHandler(filters.Regex("^Fiat-rates$"), button_fiat_action),
                 MessageHandler(filters.Regex("^Crypto-rates$"), button_crypto_action),
                 MessageHandler(filters.Regex("^AI-assistant$"), button_ai_action),
@@ -132,7 +138,7 @@ def main():
                 MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message),
             ],
         },
-        fallbacks=[CommandHandler("start", start)],
+        fallbacks=[],
     )
     application.add_handler(conv_handler)
 
