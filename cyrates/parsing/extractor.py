@@ -1,4 +1,5 @@
 import os
+import re
 from io import StringIO
 
 import bs4
@@ -58,7 +59,7 @@ class CurrencyExtractor:
     @staticmethod
     def _to_float(value) -> float:
         s = str(value).strip()
-        s = s.replace("\u00A0", "").replace(" ", "")  # NBSP и обычные пробелы
+        s = s.replace("\u00a0", "").replace(" ", "")  # NBSP и обычные пробелы
 
         # если вдруг приходит 12,090.36 (запятая тысяч) — убираем запятые
         if "," in s and "." in s:
