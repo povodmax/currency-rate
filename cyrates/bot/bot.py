@@ -144,7 +144,8 @@ def main():
     application.add_handler(conv_handler)
 
     # Logging configuration
-    logging.basicConfig(level=logging.INFO)  # global logging level
+    logging.getLogger("httpx").setLevel(logging.WARNING)        
+    logging.getLogger("telegram").setLevel(logging.WARNING)
     logging.getLogger("telegram.bot").setLevel(logging.WARNING)  # mute telegram.bot logs
     logging.getLogger("telegram.ext._application").setLevel(logging.WARNING)
     logger = logging.getLogger(__name__)
