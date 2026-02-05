@@ -65,7 +65,7 @@ def get_chatgpt_response(user_message):
     try:
         # Send query to model
         response = openai.chat.completions.create(
-            model="gpt-4",
+            model="gpt-4.1-nano",
             messages=[
                 {"role": "system", "content": const.AI_ROLE},
                 {"role": "user", "content": user_message},
