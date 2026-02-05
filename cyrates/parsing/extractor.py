@@ -55,29 +55,45 @@ class CurrencyExtractor:
         df["source"] = "cbr"
         return df[["code", "rate", "source"]]
 
+    @staticmethod
+    def _to_float(value) -> float:
+        s = str(value).strip()
+        s = s.replace("\u00A0", "").replace(" ", "")  # NBSP и обычные пробелы
+
+        # если вдруг приходит 12,090.36 (запятая тысяч) — убираем запятые
+        if "," in s and "." in s:
+            s = s.replace(",", "")
+        else:
+            # иначе запятая может быть десятичной
+            s = s.replace(",", ".")
+
+        # на всякий случай вычищаем валютные знаки и т.п.
+        s = re.sub(r"[^0-9\.-]", "", s)
+        return float(s)
+
     def get_freedom_fiat_rates(self) -> pd.DataFrame:
         def extract_non_rub_currency(pair: str) -> str:
-            parts = pair.split(" / ")
-            return parts[0] if parts[1] == "RUB" else parts[1]
+            left, right = pair.split(" / ")
+            return left if right == "RUB" else right
 
         try:
-            response = requests.get(UrlCatalog.FREEDOM)
+            response = requests.get(UrlCatalog.FREEDOM, timeout=10)
             response.raise_for_status()
             data = response.json()
 
-            items = data["data"]["mobile"]  # или "cash" / "nonCash"
+            items = data["data"]["mobile"]
 
             result = []
             for item in items:
                 currency = f"{item['buyCode']} / {item['sellCode']}"
-                buy = float(item["buyRate"].replace(",", "."))
-                sell = float(item["sellRate"].replace(",", "."))
+                buy = self._to_float(item["buyRate"])
+                sell = self._to_float(item["sellRate"])
                 result.append((currency, buy, sell))
 
             df = pd.DataFrame(result, columns=["currency", "buy", "sell"])
-            df = df.loc[df["currency"].str.contains("RUB")]
+            df = df.loc[df["currency"].str.contains("RUB", na=False)]
             df["code"] = df["currency"].apply(extract_non_rub_currency)
-            df["rate"] = df[["buy", "sell"]].max(axis=1).apply(lambda x: f"{x} ₽")
+            df["rate"] = df[["buy", "sell"]].max(axis=1).round(2).apply(lambda x: f"{x} ₽")
             df["source"] = "freedom"
             return df[["code", "rate", "source"]]
 
